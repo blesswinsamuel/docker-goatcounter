@@ -45,7 +45,7 @@ jobs:
         if: always()
         with:
           type: ${{ job.status }}
-          job_name: "*Server Deploy* ${{github.repository}}"
+          job_name: "*Docker publish* ${{github.repository}}"
           mention: "here"
           mention_if: "failure"
           channel: "#github"
