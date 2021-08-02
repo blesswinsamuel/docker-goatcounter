@@ -4,7 +4,7 @@ RUN apk add --no-cache postgresql-client
 
 # Without this goatcounter won't start.
 RUN apk --update --no-cache add tzdata
-ENV TZ America/Los_Angeles
+ENV TZ UTC
 
 ENV VERSION=2.0.4
 
