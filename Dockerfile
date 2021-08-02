@@ -11,6 +11,4 @@ RUN wget https://github.com/zgoat/goatcounter/releases/download/v$VERSION/goatco
     && mv goatcounter-v$VERSION-linux-amd64 goatcounter \
     && chmod a+x goatcounter
 
-# Run at port 5000 (dokku's default)
-# Run without tls, dokku letencrypt plugin will take care of it.
-ENTRYPOINT ./goatcounter
+ENTRYPOINT ["./goatcounter"]
