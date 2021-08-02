@@ -1,4 +1,6 @@
-FROM amd64/alpine:3.7
+FROM amd64/alpine:3.14
+
+RUN apk add --no-cache postgresql-client
 
 # Without this goatcounter won't start.
 RUN apk --update --no-cache add tzdata
