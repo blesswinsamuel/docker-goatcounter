@@ -21,6 +21,7 @@ RUN case ${TARGETPLATFORM} in \
     && wget https://github.com/zgoat/goatcounter/releases/download/v${VERSION}/${FILENAME}.gz \
     && gunzip ${FILENAME}.gz \
     && mv ${FILENAME} goatcounter \
+    && rm ${FILENAME}.gz
     && chmod a+x goatcounter
 
 ENTRYPOINT ["./goatcounter"]
