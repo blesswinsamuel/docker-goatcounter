@@ -17,7 +17,7 @@ RUN case ${TARGETPLATFORM} in \
          "linux/arm/v6") ARCH=armel  ;; \
          "linux/386")    ARCH=i386   ;; \
     esac \
-    && FILENAME=goatcounter-v${VERSION}-linux-${ARCH}
+    && FILENAME=goatcounter-v${VERSION}-linux-${ARCH} \
     && wget https://github.com/zgoat/goatcounter/releases/download/v${VERSION}/${FILENAME}.gz \
     && gunzip ${FILENAME}.gz \
     && mv ${FILENAME} goatcounter \
