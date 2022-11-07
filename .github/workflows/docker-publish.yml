@@ -2,55 +2,23 @@ name: Docker
 
 on:
   push:
-    # Publish `main` as Docker `latest` image.
     branches:
       - main
 
-    # Publish `v1.2.3` tags as releases.
     tags:
       - v*
-
-env:
-  # TODO: Change variable to your image's name.
-  IMAGE_NAME: ${{ github.repository }}
-  DOCKER_CLI_EXPERIMENTAL: enabled
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Log into registry
-        run: echo "${{ secrets.DOCKERHUB_ACCESS_TOKEN }}" | docker login -u ${{ github.actor }} --password-stdin
-
-      - name: Build the Docker image
-        run: |
-          IMAGE_ID=$IMAGE_NAME
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          # Strip git ref prefix from version
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "main" ] && VERSION=latest
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-          docker buildx create --name mybuilder --driver docker-container --use
-          docker buildx inspect --bootstrap
-          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE_ID:$VERSION --push .
-      - name: Slack Notification
-        uses: homoluctus/slatify@v2.1.2
-        if: always()
+      - uses: blesswinsamuel/github-actions/docker-build-and-push@main
         with:
-          type: ${{ job.status }}
-          job_name: "*Docker publish* ${{github.repository}}"
-          mention: "here"
-          mention_if: "failure"
-          channel: "#github"
-          url: ${{ secrets.SLACK_WEBHOOK }}
-          commit: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          docker-registry: docker.io
+          docker-image-name: ${{ github.repository }}
+          docker-username: ${{ github.actor }}
+          docker-password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
+          docker-build-platforms: linux/amd64,linux/arm64
